@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Коррекция фотографий: папка-источник и папка-результат. ИИ обрабатывает каждое фото отдельно." />
+  <link rel="canonical" href="https://pro-it-tech.pages.dev/batch.html" />
+  <meta property="og:url" content="https://pro-it-tech.pages.dev/batch.html" />
+  <meta property="og:title" content="Pro IT Tech — Коррекция фотографий" />
+  <title>Pro IT Tech — Коррекция фотографий</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="batch.html">Pro IT Tech — Коррекция фотографий</a>
+      <nav class="topnav">
+        <a href="#help">Справка</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="batch-main">
+    <div class="wrap wrap-wide">
+      <h1 class="page-heading">Коррекция фотографий</h1>
+      <p class="page-sub">Выберите <strong>папку-источник</strong> и <strong>папку-результат</strong>. При нажатии «Обработать» ИИ анализирует <strong>каждую фотографию отдельно</strong> и подбирает оптимальные параметры яркости, контраста и цветности для каждого снимка. Работает в Chrome и Edge (HTTPS).</p>
+
+      <div class="folder-cards">
+        <div class="folder-card">
+          <h2 class="folder-title">Папка-источник</h2>
+          <p class="folder-desc">Отсюда берутся фотографии для коррекции</p>
+          <button type="button" class="btn btn-primary" id="btn-src">Выбрать папку</button>
+          <p class="folder-path" id="src-path">—</p>
+        </div>
+        <div class="folder-card">
+          <h2 class="folder-title">Папка-результат</h2>
+          <p class="folder-desc">Сюда сохраняются обработанные фото</p>
+          <button type="button" class="btn btn-primary" id="btn-dst">Выбрать папку</button>
+          <p class="folder-path" id="dst-path">—</p>
+        </div>
+      </div>
+
+      <section class="params">
+        <h2 class="params-title">Параметры коррекции</h2>
+        <div class="btn-row btn-row-top">
+          <button type="button" class="btn btn-primary" id="btn-auto">Авто (ИИ) — превью</button>
+          <span class="auto-hint">Подбор параметров по первому фото для предпросмотра. При «Обработать» ИИ обрабатывает каждое фото отдельно.</span>
+        </div>
+        <div class="slider-row">
+          <label for="b">Яркость <span class="slider-value" id="b-val">100</span>%</label>
+          <input type="range" id="b" min="50" max="150" value="100" />
+        </div>
+        <div class="slider-row">
+          <label for="c">Контрастность <span class="slider-value" id="c-val">100</span>%</label>
+          <input type="range" id="c" min="50" max="150" value="100" />
+        </div>
+        <div class="slider-row">
+          <label for="s">Цветность <span class="slider-value" id="s-val">100</span>%</label>
+          <input type="range" id="s" min="0" max="200" value="100" />
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary btn-download" id="btn-process">Обработать</button>
+        </div>
+        <div class="status-line" id="status"></div>
+      </section>
+
+      <section class="help-section" id="help">
+        <h2 class="help-section-title">Справка</h2>
+        <div class="help-block">
+          <h3>Яркость</h3>
+          <p>Сдвигает общую светлоту изображения. 100% — как в исходнике; ниже — темнее, выше — светлее.</p>
+        </div>
+        <div class="help-block">
+          <h3>Контрастность</h3>
+          <p>Расстояние между светлыми и тёмными участками. Выше — резче, ниже — более «плоское» фото.</p>
+        </div>
+        <div class="help-block">
+          <h3>Цветность (насыщенность)</h3>
+          <p>Насколько интенсивны цвета. 0% — оттенки серого, 100% — как в файле, выше — более сочные цвета.</p>
+        </div>
+        <div class="help-block">
+          <h3>Автоматический подбор (ИИ)</h3>
+          <p>Параметры коррекции <strong>определяются автоматически на основе ИИ</strong>. «Авто (ИИ) — превью» подбирает по первому фото. «Обработать» анализирует каждое фото отдельно. Ползунки — для ручной корректировки.</p>
+        </div>
+        <div class="help-block">
+          <h3>Папки</h3>
+          <p>Выберите <strong>папку-источник</strong> (откуда читать фото) и <strong>папку-результат</strong> (куда сохранять). Все изображения JPG, PNG, WebP, BMP в папке и подпапках скорректируются и сохранятся как PNG. Chrome и Edge по HTTPS.</p>
+        </div>
+        <div class="help-block">
+          <h3>Конфиденциальность</h3>
+          <p>Файлы не отправляются на сервер. Обработка выполняется локально в браузере.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>© <span id="year"></span> — Pro IT Tech</span>
+      <a href="https://pro-it-tech-api.krivetkagames.workers.dev" target="_blank" rel="noopener" class="api-link">API</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var srcHandle = null, dstHandle = null;
+      var b = document.getElementById('b'), c = document.getElementById('c'), s = document.getElementById('s');
+      var bVal = document.getElementById('b-val'), cVal = document.getElementById('c-val'), sVal = document.getElementById('s-val');
+      var status = document.getElementById('status');
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      function updateLabels() {
+        bVal.textContent = b.value;
+        cVal.textContent = c.value;
+        sVal.textContent = s.value;
+      }
+      [b, c, s].forEach(function (el) { el.addEventListener('input', updateLabels); });
+
+      if (!('showDirectoryPicker' in window)) {
+        document.getElementById('btn-src').disabled = true;
+        document.getElementById('btn-dst').disabled = true;
+        document.getElementById('btn-auto').disabled = true;
+        document.getElementById('btn-process').disabled = true;
+        status.textContent = 'Выбор папок недоступен. Используйте Chrome или Edge (https).';
+      }
+
+      document.getElementById('btn-src').addEventListener('click', async function () {
+        try {
+          srcHandle = await window.showDirectoryPicker({ mode: 'read' });
+          document.getElementById('src-path').textContent = srcHandle.name;
+          status.textContent = 'Источник: ' + srcHandle.name;
+        } catch (err) {
+          if (err.name !== 'AbortError') status.textContent = 'Ошибка: ' + err.message;
+        }
+      });
+
+      document.getElementById('btn-dst').addEventListener('click', async function () {
+        try {
+          dstHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+          document.getElementById('dst-path').textContent = dstHandle.name;
+          status.textContent = 'Результат: ' + dstHandle.name;
+        } catch (err) {
+          if (err.name !== 'AbortError') status.textContent = 'Ошибка: ' + err.message;
+        }
+      });
+
+      document.getElementById('btn-auto').addEventListener('click', async function () {
+        if (!srcHandle) {
+          status.textContent = 'Сначала выберите папку-источник.';
+          return;
+        }
+        status.textContent = 'Анализ первого фото…';
+        var firstFile = null;
+        for await (var fileHandle of listImages(srcHandle)) {
+          firstFile = await fileHandle.getFile();
+          break;
+        }
+        if (!firstFile) {
+          status.textContent = 'В папке нет изображений.';
+          return;
+        }
+        var img = new Image();
+        var url = URL.createObjectURL(firstFile);
+        img.onload = function () {
+          URL.revokeObjectURL(url);
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          var w = img.naturalWidth, h = img.naturalHeight;
+          var sample = 120;
+          var scale = Math.min(1, sample / Math.max(w, h));
+          canvas.width = Math.max(1, Math.floor(w * scale));
+          canvas.height = Math.max(1, Math.floor(h * scale));
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          var pixels = data.data;
+          var sumLum = 0, sumSqLum = 0, sumSat = 0, count = 0;
+          for (var i = 0; i < pixels.length; i += 4) {
+            var r = pixels[i] / 255, g = pixels[i + 1] / 255, bl = pixels[i + 2] / 255;
+            var maxC = Math.max(r, g, bl), minC = Math.min(r, g, bl);
+            var lum = 0.299 * r + 0.587 * g + 0.114 * bl;
+            var sat = maxC === 0 ? 0 : (maxC - minC) / maxC;
+            sumLum += lum; sumSqLum += lum * lum; sumSat += sat; count++;
+          }
+          var meanLum = sumLum / count;
+          var variance = (sumSqLum / count) - (meanLum * meanLum);
+          var stdLum = Math.sqrt(Math.max(0, variance));
+          var meanSat = sumSat / count;
+          var brightnessFactor = meanLum < 0.01 ? 100 : Math.round((0.5 / meanLum) * 100);
+          brightnessFactor = Math.max(50, Math.min(150, brightnessFactor));
+          var contrastFactor = stdLum < 0.15 ? 120 : stdLum > 0.35 ? 95 : 105;
+          var saturateFactor = meanSat < 0.2 ? 130 : meanSat > 0.6 ? 90 : 110;
+          saturateFactor = Math.max(80, Math.min(150, saturateFactor));
+          b.value = brightnessFactor;
+          c.value = contrastFactor;
+          s.value = saturateFactor;
+          updateLabels();
+          status.textContent = 'ИИ: яркость ' + brightnessFactor + '%, контраст ' + contrastFactor + '%, цветность ' + saturateFactor + '%';
+        };
+        img.onerror = function () { URL.revokeObjectURL(url); status.textContent = 'Не удалось загрузить фото.'; };
+        img.src = url;
+      });
+
+      var IMG_EXTS = /\.(jpe?g|png|webp|bmp)$/i;
+
+      async function* listImages(dirHandle) {
+        for await (var entry of dirHandle.values()) {
+          if (entry.kind === 'file' && IMG_EXTS.test(entry.name))
+            yield entry;
+          if (entry.kind === 'directory') {
+            yield* listImages(entry);
+          }
+        }
+      }
+
+      function analyzeImage(ctx, w, h) {
+        var data = ctx.getImageData(0, 0, w, h);
+        var pixels = data.data;
+        var sumLum = 0, sumSqLum = 0, sumSat = 0, count = 0;
+        for (var i = 0; i < pixels.length; i += 4) {
+          var r = pixels[i] / 255, g = pixels[i + 1] / 255, bl = pixels[i + 2] / 255;
+          var maxC = Math.max(r, g, bl), minC = Math.min(r, g, bl);
+          var lum = 0.299 * r + 0.587 * g + 0.114 * bl;
+          var sat = maxC === 0 ? 0 : (maxC - minC) / maxC;
+          sumLum += lum; sumSqLum += lum * lum; sumSat += sat; count++;
+        }
+        var meanLum = sumLum / count;
+        var variance = (sumSqLum / count) - (meanLum * meanLum);
+        var stdLum = Math.sqrt(Math.max(0, variance));
+        var meanSat = sumSat / count;
+        var brightnessFactor = meanLum < 0.01 ? 100 : Math.round((0.5 / meanLum) * 100);
+        brightnessFactor = Math.max(50, Math.min(150, brightnessFactor));
+        var contrastFactor = stdLum < 0.15 ? 120 : stdLum > 0.35 ? 95 : 105;
+        var saturateFactor = meanSat < 0.2 ? 130 : meanSat > 0.6 ? 90 : 110;
+        saturateFactor = Math.max(80, Math.min(150, saturateFactor));
+        return { b: brightnessFactor, c: contrastFactor, s: saturateFactor };
+      }
+
+      function processImageWithAI(file) {
+        return new Promise(function (resolve, reject) {
+          var img = new Image();
+          var url = URL.createObjectURL(file);
+          img.onload = function () {
+            URL.revokeObjectURL(url);
+            var w = img.naturalWidth, h = img.naturalHeight;
+            var sample = 120;
+            var scale = Math.min(1, sample / Math.max(w, h));
+            var smallW = Math.max(1, Math.floor(w * scale));
+            var smallH = Math.max(1, Math.floor(h * scale));
+            var canvas = document.createElement('canvas');
+            canvas.width = smallW;
+            canvas.height = smallH;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, smallW, smallH);
+            var params = analyzeImage(ctx, smallW, smallH);
+            var filter = 'brightness(' + (params.b / 100) + ') contrast(' + (params.c / 100) + ') saturate(' + (params.s / 100) + ')';
+            canvas.width = w;
+            canvas.height = h;
+            ctx = canvas.getContext('2d');
+            ctx.filter = filter;
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob(function (blob) { resolve(blob); }, 'image/png');
+          };
+          img.onerror = function () { URL.revokeObjectURL(url); reject(); };
+          img.src = url;
+        });
+      }
+
+      document.getElementById('btn-process').addEventListener('click', async function () {
+        if (!srcHandle || !dstHandle) {
+          status.textContent = 'Сначала выберите обе папки.';
+          return;
+        }
+        var count = 0, err = 0;
+        status.textContent = 'ИИ обрабатывает каждое фото отдельно…';
+        try {
+          for await (const fileHandle of listImages(srcHandle)) {
+            try {
+              var file = await fileHandle.getFile();
+              var blob = await processImageWithAI(file);
+              var base = file.name.replace(/\.[^.]+$/, '') || 'foto';
+              var outName = base + '.png';
+              var outFile = await dstHandle.getFileHandle(outName, { create: true });
+              var writable = await outFile.createWritable();
+              await writable.write(blob);
+              await writable.close();
+              count++;
+              status.textContent = 'Обработано: ' + count + '…';
+            } catch (e) {
+              err++;
+            }
+          }
+          status.textContent = 'Готово: ' + count + ' фото сохранено. Ошибок: ' + err;
+        } catch (e) {
+          status.textContent = 'Ошибка: ' + e.message;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
