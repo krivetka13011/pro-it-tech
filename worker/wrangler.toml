@@ -1,0 +1,11 @@
+name = "korrekciya-fotografiy-api"
+main = "index.js"
+compatibility_date = "2024-01-01"
+account_id = "abd3a9f30b070ba7b27946ecb6b82945"
+workers_dev = true
+
+# Зона для кастомного домена (опционально)
+# routes = [{ pattern = "api.example.com/*", zone_name = "example.com" }]
+
+[vars]
+ENVIRONMENT = "production"
