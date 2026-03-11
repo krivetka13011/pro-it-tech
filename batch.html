@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="styles.css?v=8" />
 </head>
 <body>
   <header class="topbar">
@@ -44,16 +44,19 @@
         <section class="params">
           <h2 class="params-title">Параметры коррекции</h2>
           <div class="slider-row">
-            <label for="b">Яркость <span class="slider-value neon-text" id="b-val">100</span>%</label>
+            <label for="b">Яркость</label>
             <input type="range" id="b" min="50" max="150" value="100" class="slider-neon" />
+            <span class="slider-val-wrap"><span class="slider-value neon-text" id="b-val">100</span><span class="slider-pct neon-text">%</span></span>
           </div>
           <div class="slider-row">
-            <label for="c">Контрастность <span class="slider-value neon-text" id="c-val">100</span>%</label>
+            <label for="c">Контрастность</label>
             <input type="range" id="c" min="50" max="150" value="100" class="slider-neon" />
+            <span class="slider-val-wrap"><span class="slider-value neon-text" id="c-val">100</span><span class="slider-pct neon-text">%</span></span>
           </div>
           <div class="slider-row">
-            <label for="s">Цветность <span class="slider-value neon-text" id="s-val">100</span>%</label>
+            <label for="s">Цветность</label>
             <input type="range" id="s" min="0" max="200" value="100" class="slider-neon" />
+            <span class="slider-val-wrap"><span class="slider-value neon-text" id="s-val">100</span><span class="slider-pct neon-text">%</span></span>
           </div>
           <div class="actions-grid">
             <button type="button" class="btn btn-neon" id="btn-auto-single">Авто (ИИ)</button>
@@ -83,16 +86,19 @@
         <section class="params">
           <h2 class="params-title">Параметры коррекции</h2>
           <div class="slider-row">
-            <label for="b-batch">Яркость <span class="slider-value neon-text" id="b-val-batch">100</span>%</label>
+            <label for="b-batch">Яркость</label>
             <input type="range" id="b-batch" min="50" max="150" value="100" class="slider-neon" />
+            <span class="slider-val-wrap"><span class="slider-value neon-text" id="b-val-batch">100</span><span class="slider-pct neon-text">%</span></span>
           </div>
           <div class="slider-row">
-            <label for="c-batch">Контрастность <span class="slider-value neon-text" id="c-val-batch">100</span>%</label>
+            <label for="c-batch">Контрастность</label>
             <input type="range" id="c-batch" min="50" max="150" value="100" class="slider-neon" />
+            <span class="slider-val-wrap"><span class="slider-value neon-text" id="c-val-batch">100</span><span class="slider-pct neon-text">%</span></span>
           </div>
           <div class="slider-row">
-            <label for="s-batch">Цветность <span class="slider-value neon-text" id="s-val-batch">100</span>%</label>
+            <label for="s-batch">Цветность</label>
             <input type="range" id="s-batch" min="0" max="200" value="100" class="slider-neon" />
+            <span class="slider-val-wrap"><span class="slider-value neon-text" id="s-val-batch">100</span><span class="slider-pct neon-text">%</span></span>
           </div>
           <div class="actions-grid">
             <button type="button" class="btn btn-neon" id="btn-auto">Авто (ИИ)</button>
