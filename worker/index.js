@@ -18,7 +18,7 @@ export default {
     if (url.pathname === "/" || url.pathname === "/health") {
       return jsonResponse({
         ok: true,
-        service: "korrekciya-fotografiy-api",
+        service: "pro-it-tech-api",
         env: env.ENVIRONMENT || "production",
         timestamp: new Date().toISOString(),
       });
@@ -29,7 +29,7 @@ export default {
       return jsonResponse({
         version: "1.0",
         endpoints: ["/", "/health", "/api/info"],
-        description: "API для сервиса коррекции фотографий",
+        description: "API для Pro IT Tech — коррекция фотографий",
       });
     }
 

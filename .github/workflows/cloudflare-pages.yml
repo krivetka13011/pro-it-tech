@@ -1,5 +1,5 @@
-# Cloudflare Pages — нормальная ссылка korrekciya-fotografiy.pages.dev
-# Нужны секреты: CLOUDFLARE_API_TOKEN и CLOUDFLARE_ACCOUNT_ID (см. README или Cloudflare docs)
+# Cloudflare Pages — pro-it-tech.pages.dev
+# Секреты: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
 name: Deploy to Cloudflare Pages
 
 on:
@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: "20"
       - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy . --project-name=korrekciya-fotografiy
+        run: npx wrangler pages deploy . --project-name=pro-it-tech
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

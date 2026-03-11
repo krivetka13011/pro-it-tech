@@ -17,7 +17,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: github-pages-korrekciya-fotografiy
+  group: github-pages-pro-it-tech
   cancel-in-progress: true
 
 jobs:
