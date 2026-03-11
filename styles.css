@@ -234,19 +234,44 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
 
 /* Sliders with neon */
 .slider-row {
-  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  min-height: 28px;
 }
 
 .slider-row label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-shrink: 0;
+  width: 110px;
   font-size: 0.9rem;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
-.slider-value { font-weight: 600; }
+.slider-row .slider-neon {
+  flex: 1;
+  min-width: 0;
+}
+
+.slider-val-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  min-width: 48px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.slider-row .slider-value {
+  font-weight: 600;
+}
+
+.slider-row .slider-pct {
+  font-weight: 600;
+  margin-left: 0;
+}
 
 .slider-neon {
   width: 100%;
