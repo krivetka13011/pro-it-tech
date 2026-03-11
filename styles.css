@@ -193,35 +193,76 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
   max-width: 100%;
 }
 .preview-wrap.visible { display: block; }
-.preview-wrap .single-preview,
-.preview-wrap .single-preview-canvas {
+.compare-container {
+  position: relative;
+  width: 100%;
   max-width: 100%;
-  max-height: 280px;
+  margin: 0 auto;
+  overflow: hidden;
   border-radius: var(--radius);
+  box-shadow: 0 0 20px var(--neon-glow);
+  user-select: none;
+  touch-action: none;
+}
+
+.compare-container .compare-original,
+.compare-container .compare-processed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
-.preview-wrap .single-preview-canvas { display: none; }
-.preview-wrap.show-original .single-preview { display: block; }
-.preview-wrap.show-original .single-preview-canvas { display: none; }
-.preview-wrap:not(.show-original) .single-preview { display: none; }
-.preview-wrap:not(.show-original) .single-preview-canvas { display: block; }
 
-.btn-compare {
+.compare-container .compare-original { z-index: 1; }
+.compare-container .compare-processed { z-index: 2; }
+
+.compare-divider {
   position: absolute;
-  bottom: 12px;
-  right: 12px;
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  background: rgba(0, 0, 0, 0.7);
-  color: var(--primary);
-  border: 1px solid var(--primary);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 0 12px var(--neon-glow);
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 100%;
+  margin-left: -2px;
+  z-index: 3;
+  cursor: ew-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.btn-compare:hover, .btn-compare:active { background: rgba(0, 102, 204, 0.3); }
+
+.compare-divider-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--neon-glow), 0 0 20px var(--neon-glow);
+}
+
+.compare-divider-handle {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #0a0e1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 0 15px var(--neon-glow);
+  border: 2px solid rgba(255,255,255,0.4);
+  pointer-events: none;
+}
+
+.compare-divider:hover .compare-divider-line { width: 4px; margin-left: -2px; }
+.compare-divider:hover .compare-divider-handle { box-shadow: 0 0 25px var(--neon-glow-strong); }
 
 .batch-unavailable {
   font-size: 0.9rem;
@@ -237,16 +278,6 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
 .folder-card.drag-over { border-color: var(--primary); background: rgba(0, 102, 204, 0.08); }
 .single-upload.has-file #single-hint { color: var(--primary); font-weight: 500; text-shadow: 0 0 10px var(--neon-glow); }
 
-.single-preview {
-  max-width: 100%;
-  max-height: 280px;
-  border-radius: var(--radius);
-  margin-top: 1rem;
-  display: none;
-  box-shadow: 0 0 20px var(--neon-glow);
-}
-
-.single-preview.visible { display: block; }
 
 /* Folder cards */
 .folder-cards {
