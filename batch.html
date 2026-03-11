@@ -3,15 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Коррекция фотографий: разовая или пакетная обработка. ИИ подбирает параметры для каждого фото." />
+  <meta name="description" content="Коррекция фотографий: разовая или пакетная обработка. ИИ подбирает яркость, контраст и цветность. Работает локально в браузере." />
   <link rel="canonical" href="https://krivetka13011.github.io/pro-it-tech/batch.html" />
   <meta property="og:url" content="https://krivetka13011.github.io/pro-it-tech/batch.html" />
   <meta property="og:title" content="Коррекция фотографий на основе ИИ" />
+  <meta property="og:description" content="Коррекция фотографий: разовая или пакетная обработка. ИИ подбирает яркость, контраст и цветность. Работает локально в браузере." />
+  <meta property="og:image" content="https://krivetka13011.github.io/pro-it-tech/og-image.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
   <title>Коррекция фотографий на основе ИИ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=8" />
+  <link rel="stylesheet" href="styles.css?v=9" />
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -29,17 +34,23 @@
       <h1 class="page-heading">Коррекция фотографий</h1>
       <p class="page-sub">Выберите режим: <strong>разовая</strong> обработка одного фото или <strong>пакетная</strong> — целая папка. ИИ подбирает яркость, контраст и цветность для каждого снимка.</p>
 
-      <div class="mode-switch">
+      <div class="mode-switch" id="mode-switch">
         <button type="button" class="mode-btn active" id="mode-single">Разовая</button>
         <button type="button" class="mode-btn" id="mode-batch">Пакетная</button>
       </div>
+      <p class="batch-unavailable" id="batch-unavailable" style="display:none">Пакетная обработка доступна только в Chrome или Edge (HTTPS). Используйте режим «Разовая» или загрузку нескольких файлов с выгрузкой в ZIP.</p>
 
       <!-- Разовая обработка -->
       <div class="mode-panel active" id="panel-single">
         <div class="single-upload" id="single-upload">
           <input type="file" id="single-file" accept="image/jpeg,image/png,image/webp,image/bmp" />
-          <p id="single-hint">Выберите фото для коррекции</p>
-          <img class="single-preview" id="single-preview" alt="Превью" />
+          <p id="single-hint">Выберите фото или перетащите сюда</p>
+          <p class="format-hint">Форматы: JPEG, PNG, WebP, BMP</p>
+          <div class="preview-wrap" id="preview-wrap">
+            <img class="single-preview" id="single-preview" alt="Превью" />
+            <canvas class="single-preview-canvas" id="single-preview-canvas"></canvas>
+            <button type="button" class="btn-compare" id="btn-compare" style="display:none" title="Удерживайте для просмотра оригинала">До / После</button>
+          </div>
         </div>
         <section class="params">
           <h2 class="params-title">Параметры коррекции</h2>
@@ -58,7 +69,8 @@
             <input type="range" id="s" min="0" max="200" value="100" class="slider-neon" />
             <span class="slider-val-wrap"><span class="slider-value neon-text" id="s-val">100</span><span class="slider-pct neon-text">%</span></span>
           </div>
-          <div class="actions-grid">
+          <div class="actions-grid actions-grid-3">
+            <button type="button" class="btn btn-neon btn-outline" id="btn-reset-single">Сбросить</button>
             <button type="button" class="btn btn-neon" id="btn-auto-single">Авто (ИИ)</button>
             <button type="button" class="btn btn-neon btn-download" id="btn-process-single">Скачать</button>
           </div>
@@ -69,18 +81,32 @@
 
       <!-- Пакетная обработка -->
       <div class="mode-panel" id="panel-batch">
-        <div class="folder-cards">
-          <div class="folder-card neon-card">
-            <h2 class="folder-title">Папка-источник</h2>
-            <p class="folder-desc">Отсюда берутся фотографии</p>
-            <button type="button" class="btn btn-neon btn-sm" id="btn-src">Выбрать</button>
-            <p class="folder-path" id="src-path">—</p>
+        <div class="batch-modes">
+          <div class="folder-cards" id="folder-cards">
+            <div class="folder-card neon-card">
+              <h2 class="folder-title">Папка-источник</h2>
+              <p class="folder-desc">Отсюда берутся фотографии. Или перетащите папку.</p>
+              <button type="button" class="btn btn-neon btn-sm" id="btn-src">Выбрать</button>
+              <p class="format-hint-sm">JPEG, PNG, WebP, BMP</p>
+              <p class="folder-path" id="src-path">—</p>
+            </div>
+            <div class="folder-card neon-card">
+              <h2 class="folder-title">Папка-результат</h2>
+              <p class="folder-desc">Сюда сохраняются фото</p>
+              <button type="button" class="btn btn-neon btn-sm" id="btn-dst">Выбрать</button>
+              <p class="folder-path" id="dst-path">—</p>
+            </div>
           </div>
-          <div class="folder-card neon-card">
-            <h2 class="folder-title">Папка-результат</h2>
-            <p class="folder-desc">Сюда сохраняются фото</p>
-            <button type="button" class="btn btn-neon btn-sm" id="btn-dst">Выбрать</button>
-            <p class="folder-path" id="dst-path">—</p>
+          <div class="zip-fallback" id="zip-fallback" style="display:none">
+            <div class="folder-card neon-card zip-upload-zone" id="zip-upload-zone">
+              <h2 class="folder-title">Загрузка нескольких файлов</h2>
+              <p class="folder-desc">Выберите или перетащите фото. Результат — ZIP-архив.</p>
+              <input type="file" id="zip-files" accept="image/jpeg,image/png,image/webp,image/bmp" multiple hidden />
+              <button type="button" class="btn btn-neon btn-sm" id="btn-zip-select">Выбрать файлы</button>
+              <p class="format-hint-sm">JPEG, PNG, WebP, BMP</p>
+              <p class="folder-path" id="zip-file-list">—</p>
+              <button type="button" class="btn btn-neon btn-download btn-sm" id="btn-zip-process" style="margin-top:0.75rem" disabled>Скачать ZIP</button>
+            </div>
           </div>
         </div>
         <section class="params">
@@ -100,9 +126,18 @@
             <input type="range" id="s-batch" min="0" max="200" value="100" class="slider-neon" />
             <span class="slider-val-wrap"><span class="slider-value neon-text" id="s-val-batch">100</span><span class="slider-pct neon-text">%</span></span>
           </div>
-          <div class="actions-grid">
+          <div class="actions-grid actions-grid-3">
+            <button type="button" class="btn btn-neon btn-outline" id="btn-reset-batch">Сбросить</button>
             <button type="button" class="btn btn-neon" id="btn-auto">Авто (ИИ)</button>
             <button type="button" class="btn btn-neon btn-download" id="btn-process">Обработать</button>
+          </div>
+          <div class="progress-wrap" id="progress-wrap" style="display:none">
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            <p class="progress-text" id="progress-text">0 / 0</p>
+          </div>
+          <div class="progress-wrap" id="zip-progress-wrap" style="display:none">
+            <div class="progress-bar"><div class="progress-fill" id="zip-progress-fill"></div></div>
+            <p class="progress-text" id="zip-progress-text">0 / 0</p>
           </div>
           <p class="auto-hint">Подбор по первому фото. ИИ обрабатывает каждое фото отдельно.</p>
           <div class="status-line" id="status"></div>
@@ -113,7 +148,11 @@
         <h2 class="help-section-title">Справка</h2>
         <div class="help-block">
           <h3>Режимы</h3>
-          <p><strong>Разовая</strong> — выберите одно фото, настройте параметры и скачайте результат. <strong>Пакетная</strong> — выберите папку-источник и папку-результат, обработка всех фото в папке и подпапках. Chrome и Edge по HTTPS.</p>
+          <p><strong>Разовая</strong> — выберите одно фото (или перетащите), настройте параметры, сравните «До/После» и скачайте. <strong>Пакетная</strong> — папка-источник и папка-результат (Chrome/Edge по HTTPS) или загрузка нескольких файлов с выгрузкой в ZIP.</p>
+        </div>
+        <div class="help-block">
+          <h3>Форматы</h3>
+          <p>Поддерживаются JPEG, PNG, WebP, BMP. HEIC и RAW не поддерживаются.</p>
         </div>
         <div class="help-block">
           <h3>Яркость</h3>
@@ -211,23 +250,85 @@
   var singleHint = doc.getElementById('single-hint');
   var singleUpload = doc.getElementById('single-upload');
 
-  singleUpload.addEventListener('click', function () { singleInput.click(); });
-  singleInput.addEventListener('change', function () {
-    var f = singleInput.files[0];
+  function setSingleFile(f) {
     singleFile = f || null;
     if (f) {
       singleHint.textContent = f.name;
       singleUpload.classList.add('has-file');
       var url = URL.createObjectURL(f);
       singlePreview.src = url;
-      singlePreview.classList.add('visible');
       singlePreview.onload = function () { URL.revokeObjectURL(url); };
+      doc.getElementById('preview-wrap').classList.add('visible');
+      doc.getElementById('btn-compare').style.display = 'inline-block';
+      renderPreviewCanvas();
     } else {
-      singleHint.textContent = 'Выберите фото для коррекции';
+      singleHint.textContent = 'Выберите фото или перетащите сюда';
       singleUpload.classList.remove('has-file');
-      singlePreview.classList.remove('visible');
+      doc.getElementById('preview-wrap').classList.remove('visible');
       singlePreview.src = '';
+      doc.getElementById('btn-compare').style.display = 'none';
     }
+  }
+
+  var previewDebounce = null;
+  function renderPreviewCanvas() {
+    if (!singleFile) return;
+    clearTimeout(previewDebounce);
+    previewDebounce = setTimeout(function () {
+      var img = new Image();
+      var url = URL.createObjectURL(singleFile);
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var canvas = doc.getElementById('single-preview-canvas');
+        var w = img.naturalWidth, h = img.naturalHeight;
+        var maxH = 280;
+        var scale = h > maxH ? maxH / h : 1;
+        canvas.width = Math.round(w * scale);
+        canvas.height = Math.round(h * scale);
+        var ctx = canvas.getContext('2d');
+        var br = parseInt(b.value, 10) / 100, cr = parseInt(c.value, 10) / 100, sr = parseInt(s.value, 10) / 100;
+        ctx.filter = 'brightness(' + br + ') contrast(' + cr + ') saturate(' + sr + ')';
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.src = url;
+    }, 150);
+  }
+  [b, c, s].forEach(function (el) { if (el) el.addEventListener('input', renderPreviewCanvas); });
+
+  var btnCompare = doc.getElementById('btn-compare');
+  var previewWrap = doc.getElementById('preview-wrap');
+  btnCompare.addEventListener('mousedown', function () { previewWrap.classList.add('show-original'); });
+  btnCompare.addEventListener('mouseup', function () { previewWrap.classList.remove('show-original'); });
+  btnCompare.addEventListener('mouseleave', function () { previewWrap.classList.remove('show-original'); });
+  btnCompare.addEventListener('touchstart', function (e) { e.preventDefault(); previewWrap.classList.add('show-original'); });
+  btnCompare.addEventListener('touchend', function (e) { e.preventDefault(); previewWrap.classList.remove('show-original'); });
+
+  singleUpload.addEventListener('click', function (e) { if (!e.target.closest('.btn-compare')) singleInput.click(); });
+  singleInput.addEventListener('change', function () { setSingleFile(singleInput.files[0] || null); });
+
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (ev) {
+    singleUpload.addEventListener(ev, function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (ev === 'drop') {
+        singleUpload.classList.remove('drag-over');
+        var files = e.dataTransfer.files;
+        if (files.length && files[0].type && files[0].type.startsWith('image/')) setSingleFile(files[0]);
+      } else if (ev === 'dragenter' || ev === 'dragover') singleUpload.classList.add('drag-over');
+      else singleUpload.classList.remove('drag-over');
+    });
+  });
+
+  doc.getElementById('btn-reset-single').addEventListener('click', function () {
+    b.value = 100; c.value = 100; s.value = 100;
+    updateLabels('');
+    renderPreviewCanvas();
+    doc.getElementById('status-single').textContent = 'Параметры сброшены на 100%.';
+  });
+  doc.getElementById('btn-reset-batch').addEventListener('click', function () {
+    bBatch.value = 100; cBatch.value = 100; sBatch.value = 100;
+    updateLabels('batch');
+    doc.getElementById('status').textContent = 'Параметры сброшены на 100%.';
   });
 
   function analyzeImage(ctx, w, h) {
@@ -338,16 +439,37 @@
   var IMG_EXTS = /\.(jpe?g|png|webp|bmp)$/i;
   var srcHandle = null, dstHandle = null;
   var status = doc.getElementById('status');
+  var hasDirPicker = 'showDirectoryPicker' in window;
 
-  if (!('showDirectoryPicker' in window)) {
-    doc.getElementById('btn-src').disabled = true;
-    doc.getElementById('btn-dst').disabled = true;
-    doc.getElementById('btn-auto').disabled = true;
-    doc.getElementById('btn-process').disabled = true;
-    status.textContent = 'Выбор папок недоступен. Используйте Chrome или Edge (https).';
+  if (!hasDirPicker) {
+    doc.getElementById('folder-cards').style.display = 'none';
+    doc.getElementById('zip-fallback').style.display = 'block';
+    doc.getElementById('btn-auto').style.display = 'none';
+    doc.getElementById('btn-process').style.display = 'none';
+    doc.getElementById('batch-unavailable').style.display = 'block';
   }
 
-  doc.getElementById('btn-src').addEventListener('click', async function () {
+  var srcCard = doc.querySelector('#folder-cards .folder-card:first-child');
+  if (hasDirPicker && srcCard) {
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (ev) {
+      srcCard.addEventListener(ev, async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (ev === 'drop') {
+          srcCard.classList.remove('drag-over');
+          var item = e.dataTransfer.items && e.dataTransfer.items[0];
+          if (item && item.getAsFileSystemHandle) {
+            try {
+              var h = await item.getAsFileSystemHandle();
+              if (h.kind === 'directory') { srcHandle = h; doc.getElementById('src-path').textContent = h.name; status.textContent = 'Источник: ' + h.name; }
+            } catch (err) {}
+          }
+        } else if (ev === 'dragenter' || ev === 'dragover') srcCard.classList.add('drag-over');
+        else srcCard.classList.remove('drag-over');
+      });
+    });
+  }
+  if (hasDirPicker) doc.getElementById('btn-src').addEventListener('click', async function () {
     try {
       srcHandle = await window.showDirectoryPicker({ mode: 'read' });
       doc.getElementById('src-path').textContent = srcHandle.name;
@@ -357,7 +479,7 @@
     }
   });
 
-  doc.getElementById('btn-dst').addEventListener('click', async function () {
+  if (hasDirPicker) doc.getElementById('btn-dst').addEventListener('click', async function () {
     try {
       dstHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
       doc.getElementById('dst-path').textContent = dstHandle.name;
@@ -365,6 +487,62 @@
     } catch (err) {
       if (err.name !== 'AbortError') status.textContent = 'Ошибка: ' + err.message;
     }
+  });
+
+  var zipFiles = [];
+  var zipInput = doc.getElementById('zip-files');
+  var zipZone = doc.getElementById('zip-upload-zone');
+  var btnZipSelect = doc.getElementById('btn-zip-select');
+  var btnZipProcess = doc.getElementById('btn-zip-process');
+  var zipFileList = doc.getElementById('zip-file-list');
+  if (btnZipSelect) btnZipSelect.addEventListener('click', function () { zipInput.click(); });
+  zipInput.addEventListener('change', function () {
+    zipFiles = Array.from(zipInput.files).filter(function (f) { return IMG_EXTS.test(f.name); });
+    zipFileList.textContent = zipFiles.length ? zipFiles.length + ' файл(ов)' : '—';
+    btnZipProcess.disabled = zipFiles.length === 0;
+  });
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (ev) {
+    if (zipZone) zipZone.addEventListener(ev, function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (ev === 'drop') {
+        zipZone.classList.remove('drag-over');
+        var files = Array.from(e.dataTransfer.files).filter(function (f) { return IMG_EXTS.test(f.name); });
+        zipFiles = files;
+        zipFileList.textContent = files.length ? files.length + ' файл(ов)' : '—';
+        btnZipProcess.disabled = files.length === 0;
+      } else if (ev === 'dragenter' || ev === 'dragover') zipZone.classList.add('drag-over');
+      else zipZone.classList.remove('drag-over');
+    });
+  });
+  if (btnZipProcess) btnZipProcess.addEventListener('click', async function () {
+    if (!zipFiles.length || typeof JSZip === 'undefined') return;
+    var zip = new JSZip();
+    var total = zipFiles.length;
+    var progressWrap = doc.getElementById('zip-progress-wrap');
+    var progressFill = doc.getElementById('zip-progress-fill');
+    var progressText = doc.getElementById('zip-progress-text');
+    progressWrap.style.display = 'block';
+    progressFill.style.width = '0%';
+    for (var i = 0; i < total; i++) {
+      try {
+        var blob = await processImageWithAI(zipFiles[i], parseInt(bBatch.value, 10), parseInt(cBatch.value, 10), parseInt(sBatch.value, 10));
+        var base = (zipFiles[i].name || 'foto').replace(/\.[^.]+$/, '') || 'foto';
+        zip.file(base + '_corrected.png', blob);
+      } catch (e) {}
+      progressFill.style.width = ((i + 1) / total * 100) + '%';
+      progressText.textContent = (i + 1) + ' / ' + total;
+    }
+    status.textContent = 'Создание архива…';
+    zip.generateAsync({ type: 'blob' }).then(function (blob) {
+      var a = doc.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'corrected_photos.zip';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      status.textContent = 'Готово: ' + total + ' фото в ZIP.';
+      progressWrap.style.display = 'none';
+    });
   });
 
   async function* listImages(dirHandle) {
@@ -407,26 +585,37 @@
       status.textContent = 'Сначала выберите обе папки.';
       return;
     }
+    var files = [];
+    for await (var fh of listImages(srcHandle)) files.push(fh);
+    var total = files.length;
+    if (!total) { status.textContent = 'В папке нет изображений.'; return; }
+    var progressWrap = doc.getElementById('progress-wrap');
+    var progressFill = doc.getElementById('progress-fill');
+    var progressText = doc.getElementById('progress-text');
+    progressWrap.style.display = 'block';
+    progressFill.style.width = '0%';
+    progressText.textContent = '0 / ' + total;
     var count = 0, err = 0;
-    status.textContent = 'ИИ обрабатывает каждое фото отдельно…';
     try {
-      for await (var fileHandle of listImages(srcHandle)) {
+      for (var i = 0; i < files.length; i++) {
         try {
-          var file = await fileHandle.getFile();
-          var blob = await processImageWithAI(file);
+          var file = await files[i].getFile();
+          var blob = await processImageWithAI(file, parseInt(bBatch.value, 10), parseInt(cBatch.value, 10), parseInt(sBatch.value, 10));
           var base = file.name.replace(/\.[^.]+$/, '') || 'foto';
           var outFile = await dstHandle.getFileHandle(base + '.png', { create: true });
           var writable = await outFile.createWritable();
           await writable.write(blob);
           await writable.close();
           count++;
-          status.textContent = 'Обработано: ' + count + '…';
         } catch (e) { err++; }
+        progressFill.style.width = ((i + 1) / total * 100) + '%';
+        progressText.textContent = (i + 1) + ' / ' + total;
       }
       status.textContent = 'Готово: ' + count + ' фото сохранено. Ошибок: ' + err;
     } catch (e) {
       status.textContent = 'Ошибка: ' + e.message;
     }
+    progressWrap.style.display = 'none';
   });
 })();
   </script>
