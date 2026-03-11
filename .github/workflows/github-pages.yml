@@ -31,7 +31,7 @@ jobs:
       - name: Prepare static bundle
         run: |
           mkdir -p _site
-          cp -f batch.html 404.html styles.css _site/
+          cp -f index.html batch.html 404.html styles.css _site/
           touch _site/.nojekyll
           ls -la _site
       - uses: actions/upload-pages-artifact@v3
