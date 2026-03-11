@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles.css?v=10" />
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
 </head>
 <body>
@@ -47,9 +47,14 @@
           <p id="single-hint">Выберите фото или перетащите сюда</p>
           <p class="format-hint">Форматы: JPEG, PNG, WebP, BMP</p>
           <div class="preview-wrap" id="preview-wrap">
-            <img class="single-preview" id="single-preview" alt="Превью" />
-            <canvas class="single-preview-canvas" id="single-preview-canvas"></canvas>
-            <button type="button" class="btn-compare" id="btn-compare" style="display:none" title="Удерживайте для просмотра оригинала">До / После</button>
+            <div class="compare-container" id="compare-container">
+              <img class="compare-original" id="single-preview" alt="До" />
+              <canvas class="compare-processed" id="single-preview-canvas"></canvas>
+              <div class="compare-divider" id="compare-divider">
+                <span class="compare-divider-line"></span>
+                <span class="compare-divider-handle">⟷</span>
+              </div>
+            </div>
           </div>
         </div>
         <section class="params">
@@ -250,6 +255,42 @@
   var singleHint = doc.getElementById('single-hint');
   var singleUpload = doc.getElementById('single-upload');
 
+  var compareContainer = doc.getElementById('compare-container');
+  var compareOriginal = doc.getElementById('single-preview');
+  var compareProcessed = doc.getElementById('single-preview-canvas');
+  var compareDivider = doc.getElementById('compare-divider');
+  var dividerPos = 50;
+
+  function setCompareDivider(pct) {
+    dividerPos = Math.max(2, Math.min(98, pct));
+    compareDivider.style.left = dividerPos + '%';
+    compareDivider.style.marginLeft = '-2px';
+    compareOriginal.style.clipPath = 'inset(0 ' + (100 - dividerPos) + '% 0 0)';
+    compareProcessed.style.clipPath = 'inset(0 0 0 ' + dividerPos + '%)';
+  }
+
+  function setupDividerDrag() {
+    var dragging = false;
+    function move(e) {
+      if (!dragging) return;
+      var rect = compareContainer.getBoundingClientRect();
+      var x = (e.clientX !== undefined ? e.clientX : e.touches[0].clientX) - rect.left;
+      setCompareDivider((x / rect.width) * 100);
+    }
+    function stop() { dragging = false; doc.removeEventListener('mousemove', move); doc.removeEventListener('mouseup', stop); doc.removeEventListener('touchmove', move); doc.removeEventListener('touchend', stop); }
+    compareDivider.addEventListener('mousedown', function (e) { e.preventDefault(); dragging = true; doc.addEventListener('mousemove', move); doc.addEventListener('mouseup', stop); move(e); });
+    compareDivider.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+      dragging = true;
+      function tm(ev) { ev.preventDefault(); move(ev); }
+      function st() { doc.removeEventListener('touchmove', tm); doc.removeEventListener('touchend', st); stop(); }
+      doc.addEventListener('touchmove', tm, { passive: false });
+      doc.addEventListener('touchend', st);
+      move(e.touches[0]);
+    });
+  }
+  setupDividerDrag();
+
   function setSingleFile(f) {
     singleFile = f || null;
     if (f) {
@@ -259,51 +300,49 @@
       singlePreview.src = url;
       singlePreview.onload = function () { URL.revokeObjectURL(url); };
       doc.getElementById('preview-wrap').classList.add('visible');
-      doc.getElementById('btn-compare').style.display = 'inline-block';
       renderPreviewCanvas();
     } else {
       singleHint.textContent = 'Выберите фото или перетащите сюда';
       singleUpload.classList.remove('has-file');
       doc.getElementById('preview-wrap').classList.remove('visible');
       singlePreview.src = '';
-      doc.getElementById('btn-compare').style.display = 'none';
     }
   }
 
   var previewDebounce = null;
+  function sizeAndRender(imgEl) {
+    var w = imgEl.naturalWidth, h = imgEl.naturalHeight;
+    var parent = compareContainer.closest('.wrap-wide') || doc.body;
+    var maxW = Math.min(parent.offsetWidth || 800, 900);
+    var maxH = Math.min(window.innerHeight * 0.6, 500);
+    var scale = Math.min(maxW / w, maxH / h, 1);
+    var dispW = Math.round(w * scale);
+    var dispH = Math.round(h * scale);
+    compareContainer.style.width = dispW + 'px';
+    compareContainer.style.height = dispH + 'px';
+    var canvas = doc.getElementById('single-preview-canvas');
+    canvas.width = dispW;
+    canvas.height = dispH;
+    var ctx = canvas.getContext('2d');
+    var br = parseInt(b.value, 10) / 100, cr = parseInt(c.value, 10) / 100, sr = parseInt(s.value, 10) / 100;
+    ctx.filter = 'brightness(' + br + ') contrast(' + cr + ') saturate(' + sr + ')';
+    ctx.drawImage(imgEl, 0, 0, dispW, dispH);
+    setCompareDivider(dividerPos);
+  }
   function renderPreviewCanvas() {
     if (!singleFile) return;
     clearTimeout(previewDebounce);
     previewDebounce = setTimeout(function () {
-      var img = new Image();
-      var url = URL.createObjectURL(singleFile);
-      img.onload = function () {
-        URL.revokeObjectURL(url);
-        var canvas = doc.getElementById('single-preview-canvas');
-        var w = img.naturalWidth, h = img.naturalHeight;
-        var maxH = 280;
-        var scale = h > maxH ? maxH / h : 1;
-        canvas.width = Math.round(w * scale);
-        canvas.height = Math.round(h * scale);
-        var ctx = canvas.getContext('2d');
-        var br = parseInt(b.value, 10) / 100, cr = parseInt(c.value, 10) / 100, sr = parseInt(s.value, 10) / 100;
-        ctx.filter = 'brightness(' + br + ') contrast(' + cr + ') saturate(' + sr + ')';
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      };
-      img.src = url;
+      if (singlePreview.complete && singlePreview.naturalWidth) {
+        sizeAndRender(singlePreview);
+      } else {
+        singlePreview.addEventListener('load', function onLoad() { singlePreview.removeEventListener('load', onLoad); sizeAndRender(singlePreview); });
+      }
     }, 150);
   }
   [b, c, s].forEach(function (el) { if (el) el.addEventListener('input', renderPreviewCanvas); });
 
-  var btnCompare = doc.getElementById('btn-compare');
-  var previewWrap = doc.getElementById('preview-wrap');
-  btnCompare.addEventListener('mousedown', function () { previewWrap.classList.add('show-original'); });
-  btnCompare.addEventListener('mouseup', function () { previewWrap.classList.remove('show-original'); });
-  btnCompare.addEventListener('mouseleave', function () { previewWrap.classList.remove('show-original'); });
-  btnCompare.addEventListener('touchstart', function (e) { e.preventDefault(); previewWrap.classList.add('show-original'); });
-  btnCompare.addEventListener('touchend', function (e) { e.preventDefault(); previewWrap.classList.remove('show-original'); });
-
-  singleUpload.addEventListener('click', function (e) { if (!e.target.closest('.btn-compare')) singleInput.click(); });
+  singleUpload.addEventListener('click', function (e) { if (!e.target.closest('.compare-divider')) singleInput.click(); });
   singleInput.addEventListener('change', function () { setSingleFile(singleInput.files[0] || null); });
 
   ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (ev) {
