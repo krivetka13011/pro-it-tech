@@ -10,8 +10,8 @@
   <title>Коррекция фотографий на основе ИИ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=3" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
   <header class="topbar">
@@ -47,17 +47,29 @@
             <button type="button" class="btn btn-primary" id="btn-auto-single">Авто (ИИ)</button>
             <span class="auto-hint">Подбор параметров по выбранному фото</span>
           </div>
-          <div class="slider-row">
-            <label for="b">Яркость <span class="slider-value" id="b-val">100</span>%</label>
-            <input type="range" id="b" min="50" max="150" value="100" />
+          <div class="param-row">
+            <span class="param-label">Яркость</span>
+            <div class="param-stepper">
+              <button type="button" class="stepper-btn" data-target="b" data-delta="-5">−</button>
+              <input type="number" id="b" class="param-input" min="50" max="150" value="100" />
+              <button type="button" class="stepper-btn" data-target="b" data-delta="5">+</button>
+            </div>
           </div>
-          <div class="slider-row">
-            <label for="c">Контрастность <span class="slider-value" id="c-val">100</span>%</label>
-            <input type="range" id="c" min="50" max="150" value="100" />
+          <div class="param-row">
+            <span class="param-label">Контрастность</span>
+            <div class="param-stepper">
+              <button type="button" class="stepper-btn" data-target="c" data-delta="-5">−</button>
+              <input type="number" id="c" class="param-input" min="50" max="150" value="100" />
+              <button type="button" class="stepper-btn" data-target="c" data-delta="5">+</button>
+            </div>
           </div>
-          <div class="slider-row">
-            <label for="s">Цветность <span class="slider-value" id="s-val">100</span>%</label>
-            <input type="range" id="s" min="0" max="200" value="100" />
+          <div class="param-row">
+            <span class="param-label">Цветность</span>
+            <div class="param-stepper">
+              <button type="button" class="stepper-btn" data-target="s" data-delta="-10">−</button>
+              <input type="number" id="s" class="param-input" min="0" max="200" value="100" />
+              <button type="button" class="stepper-btn" data-target="s" data-delta="10">+</button>
+            </div>
           </div>
           <div class="btn-row">
             <button type="button" class="btn btn-primary btn-download" id="btn-process-single">Обработать и скачать</button>
@@ -72,33 +84,45 @@
           <div class="folder-card">
             <h2 class="folder-title">Папка-источник</h2>
             <p class="folder-desc">Отсюда берутся фотографии для коррекции</p>
-            <button type="button" class="btn btn-primary" id="btn-src">Выбрать папку</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-src">Выбрать папку</button>
             <p class="folder-path" id="src-path">—</p>
           </div>
           <div class="folder-card">
             <h2 class="folder-title">Папка-результат</h2>
             <p class="folder-desc">Сюда сохраняются обработанные фото</p>
-            <button type="button" class="btn btn-primary" id="btn-dst">Выбрать папку</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-dst">Выбрать папку</button>
             <p class="folder-path" id="dst-path">—</p>
           </div>
         </div>
         <section class="params">
           <h2 class="params-title">Параметры коррекции</h2>
           <div class="btn-row btn-row-top">
-            <button type="button" class="btn btn-primary" id="btn-auto">Авто (ИИ) — превью</button>
+            <button type="button" class="btn btn-outline" id="btn-auto">Авто (ИИ) — превью</button>
             <span class="auto-hint">Подбор по первому фото. При «Обработать» ИИ обрабатывает каждое фото отдельно.</span>
           </div>
-          <div class="slider-row">
-            <label for="b-batch">Яркость <span class="slider-value" id="b-val-batch">100</span>%</label>
-            <input type="range" id="b-batch" min="50" max="150" value="100" />
+          <div class="param-row">
+            <span class="param-label">Яркость</span>
+            <div class="param-stepper">
+              <button type="button" class="stepper-btn" data-target="b-batch" data-delta="-5">−</button>
+              <input type="number" id="b-batch" class="param-input" min="50" max="150" value="100" />
+              <button type="button" class="stepper-btn" data-target="b-batch" data-delta="5">+</button>
+            </div>
           </div>
-          <div class="slider-row">
-            <label for="c-batch">Контрастность <span class="slider-value" id="c-val-batch">100</span>%</label>
-            <input type="range" id="c-batch" min="50" max="150" value="100" />
+          <div class="param-row">
+            <span class="param-label">Контрастность</span>
+            <div class="param-stepper">
+              <button type="button" class="stepper-btn" data-target="c-batch" data-delta="-5">−</button>
+              <input type="number" id="c-batch" class="param-input" min="50" max="150" value="100" />
+              <button type="button" class="stepper-btn" data-target="c-batch" data-delta="5">+</button>
+            </div>
           </div>
-          <div class="slider-row">
-            <label for="s-batch">Цветность <span class="slider-value" id="s-val-batch">100</span>%</label>
-            <input type="range" id="s-batch" min="0" max="200" value="100" />
+          <div class="param-row">
+            <span class="param-label">Цветность</span>
+            <div class="param-stepper">
+              <button type="button" class="stepper-btn" data-target="s-batch" data-delta="-10">−</button>
+              <input type="number" id="s-batch" class="param-input" min="0" max="200" value="100" />
+              <button type="button" class="stepper-btn" data-target="s-batch" data-delta="10">+</button>
+            </div>
           </div>
           <div class="btn-row">
             <button type="button" class="btn btn-primary btn-download" id="btn-process">Обработать</button>
@@ -168,36 +192,44 @@
 
   doc.getElementById('year').textContent = new Date().getFullYear();
 
-  function syncSliders(from, to) {
+  function clamp(val, min, max) { return Math.min(max, Math.max(min, parseInt(val, 10) || min)); }
+
+  function syncParams(from, to) {
     var ids = ['b','c','s'];
     if (to) ids = ids.map(function(x){ return x + '-' + to; });
     ids.forEach(function(id, i) {
       var inp = doc.getElementById(id);
       if (inp) inp.value = from[i].value;
     });
-    updateLabels(to);
   }
 
-  function updateLabels(mode) {
-    var suffix = mode ? '-' + mode : '';
-    ['b','c','s'].forEach(function(id) {
-      var inp = doc.getElementById(id + suffix);
-      var val = doc.getElementById(id + '-val' + suffix);
-      if (inp && val) val.textContent = inp.value;
+  doc.querySelectorAll('.stepper-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = btn.getAttribute('data-target');
+      var delta = parseInt(btn.getAttribute('data-delta'), 10);
+      var inp = doc.getElementById(id);
+      if (!inp) return;
+      var min = parseInt(inp.min, 10), max = parseInt(inp.max, 10);
+      inp.value = clamp(parseInt(inp.value, 10) + delta, min, max);
     });
-  }
+  });
+
+  doc.querySelectorAll('.param-input').forEach(function(inp) {
+    inp.addEventListener('change', function() {
+      var min = parseInt(inp.min, 10), max = parseInt(inp.max, 10);
+      inp.value = clamp(inp.value, min, max);
+    });
+  });
 
   var b = doc.getElementById('b'), c = doc.getElementById('c'), s = doc.getElementById('s');
   var bBatch = doc.getElementById('b-batch'), cBatch = doc.getElementById('c-batch'), sBatch = doc.getElementById('s-batch');
-  [b,c,s].forEach(function(el){ if(el) el.addEventListener('input', function(){ updateLabels(''); }); });
-  [bBatch,cBatch,sBatch].forEach(function(el){ if(el) el.addEventListener('input', function(){ updateLabels('batch'); }); });
 
   function modeSwitch(single) {
     doc.getElementById('panel-single').classList.toggle('active', single);
     doc.getElementById('panel-batch').classList.toggle('active', !single);
     doc.getElementById('mode-single').classList.toggle('active', single);
     doc.getElementById('mode-batch').classList.toggle('active', !single);
-    if (single) syncSliders([bBatch,cBatch,sBatch], ''); else syncSliders([b,c,s], 'batch');
+    if (single) syncParams([bBatch,cBatch,sBatch], ''); else syncParams([b,c,s], 'batch');
   }
 
   doc.getElementById('mode-single').addEventListener('click', function () { modeSwitch(true); });
@@ -307,7 +339,6 @@
       b.value = params.b;
       c.value = params.c;
       s.value = params.s;
-      updateLabels('');
       status.textContent = 'ИИ: яркость ' + params.b + '%, контраст ' + params.c + '%, цветность ' + params.s + '%';
     };
     img.onerror = function () { URL.revokeObjectURL(url); status.textContent = 'Ошибка загрузки.'; };
@@ -395,7 +426,6 @@
       bBatch.value = params.b;
       cBatch.value = params.c;
       sBatch.value = params.s;
-      updateLabels('batch');
       status.textContent = 'ИИ: яркость ' + params.b + '%, контраст ' + params.c + '%, цветность ' + params.s + '%';
     };
     img.onerror = function () { URL.revokeObjectURL(url); status.textContent = 'Не удалось загрузить фото.'; };
