@@ -16,8 +16,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Prepare site
+        run: |
+          mkdir -p _site
+          cp -f index.html batch.html 404.html styles.css _site/
       - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy . --project-name=pro-it-tech
+        run: npx wrangler pages deploy _site --project-name=pro-it-tech
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -11,6 +11,9 @@ on:
       - ".github/workflows/github-pages.yml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
