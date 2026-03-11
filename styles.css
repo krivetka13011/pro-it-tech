@@ -1,10 +1,10 @@
 /* Неоновая синяя стилистика */
 :root,
 html.light {
-  --primary: #00d4ff;
-  --primary-dim: #00a8cc;
-  --neon-glow: rgba(0, 212, 255, 0.5);
-  --neon-glow-strong: rgba(0, 212, 255, 0.7);
+  --primary: #0066cc;
+  --primary-dim: #004d99;
+  --neon-glow: rgba(0, 102, 204, 0.5);
+  --neon-glow-strong: rgba(0, 102, 204, 0.7);
   --bg: #0a0e1a;
   --bg-subtle: #0f1629;
   --surface: #121a2d;
@@ -42,7 +42,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 212, 255, 0.06) 0%, transparent 50%);
+  background-image: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 102, 204, 0.08) 0%, transparent 50%);
 }
 
 .wrap { width: 100%; max-width: 720px; margin: 0 auto; padding: 0 1.25rem; }
@@ -130,7 +130,7 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
   color: var(--primary);
   font-weight: 600;
   box-shadow: 0 0 18px var(--neon-glow);
-  border: 1px solid rgba(0, 212, 255, 0.3);
+  border: 1px solid rgba(0, 102, 204, 0.4);
 }
 
 .mode-panel { display: none; }
@@ -205,7 +205,7 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
 }
 
 .folder-card.neon-card:hover {
-  border-color: rgba(0, 212, 255, 0.4);
+  border-color: rgba(0, 102, 204, 0.5);
   box-shadow: 0 0 25px var(--neon-glow);
 }
 
@@ -220,7 +220,7 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
   border-radius: var(--radius-lg);
   padding: 1.75rem 2rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 0 30px rgba(0, 212, 255, 0.05);
+  box-shadow: 0 0 30px rgba(0, 102, 204, 0.08);
 }
 
 .params-title {
@@ -332,7 +332,7 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
 }
 
 .btn-neon:hover {
-  box-shadow: 0 0 30px var(--neon-glow), 0 0 45px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 0 30px var(--neon-glow), 0 0 45px rgba(0, 102, 204, 0.35);
   transform: translateY(-2px);
 }
 
@@ -376,7 +376,7 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
   margin-bottom: 1rem;
 }
 
-.help-block:hover { border-color: rgba(0, 212, 255, 0.2); box-shadow: 0 0 15px rgba(0, 212, 255, 0.05); }
+.help-block:hover { border-color: rgba(0, 102, 204, 0.3); box-shadow: 0 0 15px rgba(0, 102, 204, 0.08); }
 
 .help-block h3 { margin: 0 0 0.4rem; font-size: 0.95rem; font-weight: 600; }
 .help-block p { margin: 0; font-size: 0.9375rem; color: var(--muted); }
