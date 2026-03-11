@@ -1,5 +1,5 @@
-# Зеркало сайта на GitHub Pages — обычно открывается без VPN
-# Один раз: Settings → Pages → Build: GitHub Actions
+# GitHub Pages — peaceiris/actions-gh-pages (работает без настройки Pages)
+# После первого деплоя: Settings → Pages → Source: Deploy from a branch → Branch: gh-pages
 name: Deploy to GitHub Pages
 
 on:
@@ -11,31 +11,20 @@ on:
       - ".github/workflows/github-pages.yml"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: github-pages-pro-it-tech
-  cancel-in-progress: true
-
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare static bundle
+      - name: Prepare site
         run: |
           mkdir -p _site
           cp -f index.html batch.html 404.html styles.css _site/
           touch _site/.nojekyll
-          ls -la _site
-      - uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: _site
-      - id: deploy
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _site
+          publish_branch: gh-pages
+          allow_empty_commit: true
