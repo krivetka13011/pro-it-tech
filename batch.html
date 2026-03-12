@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=10" />
+  <link rel="stylesheet" href="styles.css?v=12" />
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
 </head>
 <body>
@@ -323,15 +323,16 @@
     compareContainer.style.width = dispW + 'px';
     compareContainer.style.height = dispH + 'px';
     var canvas = doc.getElementById('single-preview-canvas');
-    var dpr = window.devicePixelRatio || 1;
-    canvas.width = dispW * dpr;
-    canvas.height = dispH * dpr;
+    canvas.width = w;
+    canvas.height = h;
     canvas.style.width = dispW + 'px';
     canvas.style.height = dispH + 'px';
     var ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     var br = parseInt(b.value, 10) / 100, cr = parseInt(c.value, 10) / 100, sr = parseInt(s.value, 10) / 100;
     ctx.filter = 'brightness(' + br + ') contrast(' + cr + ') saturate(' + sr + ')';
-    ctx.drawImage(imgEl, 0, 0, dispW * dpr, dispH * dpr);
+    ctx.drawImage(imgEl, 0, 0, w, h);
     setCompareDivider(dividerPos);
   }
   function renderPreviewCanvas() {
