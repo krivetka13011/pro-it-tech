@@ -456,7 +456,14 @@
       c.value = params.c;
       s.value = params.s;
       updateLabels('');
-      renderPreviewCanvas();
+      if (singlePreview.complete && singlePreview.naturalWidth) {
+        sizeAndRender(singlePreview);
+      } else {
+        singlePreview.addEventListener('load', function onLoad() {
+          singlePreview.removeEventListener('load', onLoad);
+          sizeAndRender(singlePreview);
+        });
+      }
       status.textContent = 'ИИ: яркость ' + params.b + '%, контраст ' + params.c + '%, цветность ' + params.s + '%';
     };
     img.onerror = function () { URL.revokeObjectURL(url); status.textContent = 'Ошибка загрузки.'; };
