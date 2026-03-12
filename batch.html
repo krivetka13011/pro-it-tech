@@ -266,7 +266,7 @@
   function setCompareDivider(pct) {
     dividerPos = Math.max(2, Math.min(98, pct));
     compareDivider.style.left = dividerPos + '%';
-    compareDivider.style.marginLeft = '-2px';
+    compareDivider.style.marginLeft = '-12px';
     compareOriginal.style.clipPath = 'inset(0 ' + (100 - dividerPos) + '% 0 0)';
     compareProcessed.style.clipPath = 'inset(0 0 0 ' + dividerPos + '%)';
   }

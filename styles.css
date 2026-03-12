@@ -239,9 +239,9 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
   position: absolute;
   top: 0;
   left: 50%;
-  width: 4px;
+  width: 24px;
   height: 100%;
-  margin-left: -2px;
+  margin-left: -12px;
   z-index: 3;
   cursor: ew-resize;
   display: flex;
@@ -254,16 +254,16 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
   left: 50%;
   top: 0;
   bottom: 0;
-  width: 2px;
-  margin-left: -1px;
+  width: 4px;
+  margin-left: -2px;
   background: var(--primary);
-  box-shadow: 0 0 10px var(--neon-glow), 0 0 20px var(--neon-glow);
+  box-shadow: 0 0 12px var(--neon-glow), 0 0 24px var(--neon-glow);
 }
 
 .compare-divider-handle {
   position: relative;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--primary);
   color: #0a0e1a;
@@ -277,7 +277,7 @@ html.light .topbar { background: rgba(255,255,255,0.95); }
   pointer-events: none;
 }
 
-.compare-divider:hover .compare-divider-line { width: 4px; margin-left: -2px; }
+.compare-divider:hover .compare-divider-line { width: 5px; margin-left: -2.5px; }
 .compare-divider:hover .compare-divider-handle { box-shadow: 0 0 25px var(--neon-glow-strong); }
 
 .batch-unavailable {
