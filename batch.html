@@ -48,8 +48,10 @@
           <p class="format-hint">Форматы: JPEG, PNG, WebP, BMP</p>
           <div class="preview-wrap" id="preview-wrap">
             <div class="compare-container" id="compare-container">
-              <img class="compare-original" id="single-preview" alt="До" />
+              <img class="compare-original" id="single-preview" alt="До коррекции" />
               <canvas class="compare-processed" id="single-preview-canvas"></canvas>
+              <span class="compare-label compare-label-left">До</span>
+              <span class="compare-label compare-label-right">После</span>
               <div class="compare-divider" id="compare-divider">
                 <span class="compare-divider-line"></span>
                 <span class="compare-divider-handle">⟷</span>
@@ -313,20 +315,23 @@
   function sizeAndRender(imgEl) {
     var w = imgEl.naturalWidth, h = imgEl.naturalHeight;
     var parent = compareContainer.closest('.wrap-wide') || doc.body;
-    var maxW = Math.min(parent.offsetWidth || 800, 900);
-    var maxH = Math.min(window.innerHeight * 0.6, 500);
+    var maxW = Math.min(parent.offsetWidth || 900, 1200);
+    var maxH = Math.min(window.innerHeight * 0.75, 700);
     var scale = Math.min(maxW / w, maxH / h, 1);
     var dispW = Math.round(w * scale);
     var dispH = Math.round(h * scale);
     compareContainer.style.width = dispW + 'px';
     compareContainer.style.height = dispH + 'px';
     var canvas = doc.getElementById('single-preview-canvas');
-    canvas.width = dispW;
-    canvas.height = dispH;
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = dispW * dpr;
+    canvas.height = dispH * dpr;
+    canvas.style.width = dispW + 'px';
+    canvas.style.height = dispH + 'px';
     var ctx = canvas.getContext('2d');
     var br = parseInt(b.value, 10) / 100, cr = parseInt(c.value, 10) / 100, sr = parseInt(s.value, 10) / 100;
     ctx.filter = 'brightness(' + br + ') contrast(' + cr + ') saturate(' + sr + ')';
-    ctx.drawImage(imgEl, 0, 0, dispW, dispH);
+    ctx.drawImage(imgEl, 0, 0, dispW * dpr, dispH * dpr);
     setCompareDivider(dividerPos);
   }
   function renderPreviewCanvas() {
